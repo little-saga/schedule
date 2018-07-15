@@ -2114,9 +2114,9 @@ levn@~0.3.0:
     prelude-ls "~1.1.2"
     type-check "~0.3.2"
 
-little-saga@^0.4.0:
-  version "0.4.0"
-  resolved "http://registry.npm.taobao.org/little-saga/download/little-saga-0.4.0.tgz#21ba5375145c6891c163b1e0d5dedb0f16f907ee"
+little-saga@^0.4.1:
+  version "0.4.1"
+  resolved "http://registry.npm.taobao.org/little-saga/download/little-saga-0.4.1.tgz#bdd5163f6324b4123ba7b560c2cf99925b2e1a36"
   dependencies:
     "@types/node" "^10.5.2"
 
