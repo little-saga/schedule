@@ -1,4 +1,3 @@
-import moment from 'moment'
 import { TIME_UNITS } from './constant'
 
 const cmp = (x, y) => x - y
@@ -56,14 +55,14 @@ export default class TimeCalculator {
     this.pattern = pattern
   }
 
-  /** @param m {moment.Moment} */
-  calculate(m) {
+  /** @param d {Date} */
+  calculate(d) {
     const pat = this.pattern
     const t = {
-      millisecond: m.millisecond(),
-      second: m.second(),
-      minute: m.minute(),
-      hour: m.hour(),
+      millisecond: d.getMilliseconds(),
+      second: d.getSeconds(),
+      minute: d.getMinutes(),
+      hour: d.getHours(),
     }
 
     let delta = 0
@@ -110,14 +109,14 @@ export default class TimeCalculator {
     return delta
   }
 
-  /** @param m {moment.Moment} */
-  test(m) {
+  /** @param d {Date} */
+  test(d) {
     const pats = this.pattern
     return [
-      testPattern(pats.hour, m.hour()),
-      testPattern(pats.minute, m.minute()),
-      testPattern(pats.second, m.second()),
-      testPattern(pats.millisecond, m.millisecond()),
+      testPattern(pats.hour, d.getHours()),
+      testPattern(pats.minute, d.getMinutes()),
+      testPattern(pats.second, d.getSeconds()),
+      testPattern(pats.millisecond, d.getMilliseconds()),
     ].every(Boolean)
   }
 }

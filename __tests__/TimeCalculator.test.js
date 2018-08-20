@@ -1,10 +1,40 @@
 import TimeCalculator from '../src/TimeCalculator'
-import moment from 'moment'
 
-moment.locale('zh-cn')
+const makeTime = str => {
+  const {
+    groups: { hour, minute, second, ms },
+  } = str.match(/(?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d)(\.(?<ms>\d{1,3}))?/)
+  const d = new Date()
+  d.setHours(Number(hour))
+  d.setMinutes(Number(minute))
+  d.setSeconds(Number(second))
+  d.setMilliseconds(Number(ms || 0))
+  return d
+}
 
-const makeTime = s => moment(s, 'HH:mm:ss')
-const makeDatetime = s => moment(s, 'MM-DD HH:mm:ss')
+const makeDatetime = str => {
+  const {
+    groups: { month, date, hour, minute, second },
+  } = str.match(/(?<month>\d\d)-(?<date>\d\d) (?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d)/)
+  const d = new Date()
+  d.setMonth(Number(month - 1))
+  d.setDate(Number(date))
+  d.setHours(Number(hour))
+  d.setMinutes(Number(minute))
+  d.setSeconds(Number(second))
+  d.setMilliseconds(0)
+  return d
+}
+
+test('invalid pattern', () => {
+  expect(() => new TimeCalculator({ second: 'invalid' })).toThrow('Invalid pattern')
+})
+
+test('calculator.test against { second: * }', () => {
+  const calculator = new TimeCalculator({ second: '*' })
+  expect(calculator.test(makeTime('10:00:01'))).toBe(true)
+  expect(calculator.test(makeDatetime('03-25 10:00:00'))).toBe(true)
+})
 
 test('calculator.test against { hour: 10 }', () => {
   const calculator = new TimeCalculator({ hour: 10 })
@@ -44,6 +74,24 @@ const d = {
   hours: x => x * d.minutes(60),
   days: x => x * d.hours(24),
 }
+
+test('calculator.calculate against { millisecond: * }', () => {
+  const calculator = new TimeCalculator({ millisecond: '*' })
+  expect(calculator.calculate(makeTime('10:00:01'))).toBe(0)
+  expect(calculator.calculate(makeTime('10:00:01.040'))).toBe(0)
+  expect(calculator.calculate(makeTime('10:00:01.100'))).toBe(0)
+  expect(calculator.calculate(makeTime('10:00:01.120'))).toBe(0)
+  expect(calculator.calculate(makeTime('10:00:01.350'))).toBe(0)
+})
+
+test('calculator.calculate against { millisecond: [0, 100, 200] }', () => {
+  const calculator = new TimeCalculator({ millisecond: [0, 100, 200] })
+  expect(calculator.calculate(makeTime('10:00:01'))).toBe(d.milliseconds(0))
+  expect(calculator.calculate(makeTime('10:00:01.040'))).toBe(d.milliseconds(60))
+  expect(calculator.calculate(makeTime('10:00:01.100'))).toBe(d.milliseconds(0))
+  expect(calculator.calculate(makeTime('10:00:01.120'))).toBe(d.milliseconds(80))
+  expect(calculator.calculate(makeTime('10:00:01.350'))).toBe(d.milliseconds(650))
+})
 
 test('calculator.calculate against { hour: 10 }', () => {
   const calculator = new TimeCalculator({ hour: 10 })
