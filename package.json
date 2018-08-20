@@ -8,9 +8,17 @@
     "url": "https://github.com/shinima"
   },
   "repository": "https://github.com/little-saga/schedule",
+  "main": "dist/index.js",
+  "module": "dist/index.mjs",
   "scripts": {
-    "test": "jest"
+    "build": "rollup --config rollup.config.js",
+    "test": "jest",
+    "prepublish": "rimraf dist && npm run build"
   },
+  "files": [
+    "dist/",
+    "readme.md"
+  ],
   "dependencies": {
     "little-saga": "^0.4.3"
   },
@@ -23,7 +31,9 @@
     "babel-core": "^7.0.0-0",
     "babel-jest": "^23.4.0",
     "jest": "^23.4.1",
-    "prettier": "^1.13.7"
+    "prettier": "^1.13.7",
+    "rimraf": "^2.6.2",
+    "rollup": "^0.64.1"
   },
   "babel": {
     "plugins": [
