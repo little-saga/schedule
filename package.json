@@ -10,6 +10,7 @@
   "repository": "https://github.com/little-saga/schedule",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
+  "typings": "index.d.ts",
   "scripts": {
     "build": "rollup --config rollup.config.js",
     "test": "jest --coverage",
@@ -17,6 +18,7 @@
   },
   "files": [
     "dist/",
+    "index.d.ts",
     "readme.md"
   ],
   "dependencies": {

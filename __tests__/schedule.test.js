@@ -30,11 +30,12 @@ test('scheduleWorker', () => {
 
 test('scheduleWithPredicate', async () => {
   const pattern = { minute: [0, 20, 40] }
+  const predicate = always(true)
   const fn = () => null
   const args = [1, 2, 3]
 
-  expect(scheduleWithPredicate(pattern, fn, ...args)).toEqual(
-    io.fork(scheduleWithPredicateWorker, pattern, fn, ...args),
+  expect(scheduleWithPredicate(pattern, predicate, fn, ...args)).toEqual(
+    io.fork(scheduleWithPredicateWorker, pattern, predicate, fn, ...args),
   )
 })
 

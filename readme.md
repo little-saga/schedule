@@ -2,9 +2,9 @@
 
 # @little-saga/schedule
 
-@littl-saga/schedule 是一个简单的类库，提供了一些简单的 API 来管理定时任务。
+@littl-saga/schedule 是一个简单的类库，提供了一些简单的 API 来管理定时任务。注意该类库只能和 little-saga 一起使用。
 
-目录：
+**目录：**
 
 <!-- toc -->
 
@@ -50,19 +50,19 @@ runSaga(options, gen)
 
 ## `schedule(pattern, worker, ...args)`
 
-启动一个定时任务，在接下来每一个个满足 `pattern` 的时刻，`worker` 都将被执行。`schedule` 是一个 sagaHelper（和 `takeEvery` 类似），调用 `schedule` 将返回一个 fork effect，而 yield fork effect 可以得到一个 task 对象，我们可以通过 task 对象来取消任务。调用 `schedule` 时可以指定 `worker` 被调用的所使用的参数。
+启动一个定时任务，在接下来每一个满足 `pattern` 的时刻，`worker` 都将被执行。`schedule` 是一个 sagaHelper（和 `takeEvery` 类似），调用 `schedule` 将返回一个 fork effect，而 yield fork effect 可以得到一个 task 对象，我们可以通过 task 对象来取消任务。调用 `schedule` 时，我们可以通过参数 `args` 来指定 `worker` 被调用的所使用的参数。
 
 ```javascript
 function* gen() {
   const task = yield schedule({ hour: '*' }, worker, ...args)
-  // 在接下来的每个小时开头，worker 都会像这样被调用：worker(...args)
+  // 在接下来每个小时的开头，worker 都会像这样被调用：worker(...args)
   // 我们可以像这样来取消任务：yield io.cancel(task)
 }
 ```
 
 ## `waitWithPredicate(pattern, predicate)`
 
-`wait` 的 `pattern` 参数比较简单，这样 @little-saga/schedule 可以**根据目标时刻直接计算出还需要等待多少时间**；而 `waitWithPredicate` 则允许我们指定更加灵活的条件，其接受参数 `predicate`，用来判断某个时刻是否满足时间条件。 `predicate` 被调用时会接受一个参数 `date`，类型为 JavaScript 内置的 Date 类，该函数需要返回一个布尔值表示 `date` 是否满足了条件。如果 `date` 不满足 `predicate`，则 `waitWithPredicate` 会等到下一个满足 `pattern` 的时刻，然后再重新进行判断，直到满足 `predicate`。
+`wait` 的 `pattern` 参数比较简单，这样 @little-saga/schedule 可以**根据目标时刻直接计算出还需要等待多少时间**；而 `waitWithPredicate` 则允许我们指定更加灵活的条件，其接受参数 `predicate`，用来判断某个时刻是否满足时间条件。 `predicate` 被调用时会接受一个参数 `date`，类型为 JavaScript 内置的 `Date` 类，该函数需要返回一个布尔值表示 `date` 是否满足了条件。如果 `date` 不满足 `predicate`，则 `waitWithPredicate` 会等到下一个满足 `pattern` 的时刻，然后再重新进行判断，直到满足 `predicate`。
 
 ```javascript
 function* gen() {
