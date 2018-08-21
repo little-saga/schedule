@@ -12,7 +12,7 @@
   "module": "dist/index.mjs",
   "scripts": {
     "build": "rollup --config rollup.config.js",
-    "test": "jest",
+    "test": "jest --coverage",
     "prepublish": "rimraf dist && npm run build"
   },
   "files": [

@@ -1,9 +1,7 @@
 import TimeCalculator from '../src/TimeCalculator'
 
 const makeTime = str => {
-  const {
-    groups: { hour, minute, second, ms },
-  } = str.match(/(?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d)(\.(?<ms>\d{1,3}))?/)
+  const [_, hour, minute, second, ms] = str.match(/(\d\d):(\d\d):(\d\d)(?:\.(\d{1,3}))?/)
   const d = new Date()
   d.setHours(Number(hour))
   d.setMinutes(Number(minute))
@@ -13,9 +11,7 @@ const makeTime = str => {
 }
 
 const makeDatetime = str => {
-  const {
-    groups: { month, date, hour, minute, second },
-  } = str.match(/(?<month>\d\d)-(?<date>\d\d) (?<hour>\d\d):(?<minute>\d\d):(?<second>\d\d)/)
+  const [_, month, date, hour, minute, second] = str.match(/(\d\d)-(\d\d) (\d\d):(\d\d):(\d\d)/)
   const d = new Date()
   d.setMonth(Number(month - 1))
   d.setDate(Number(date))
