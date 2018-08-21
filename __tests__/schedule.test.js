@@ -1,43 +1,58 @@
-import { runSaga, delay } from 'little-saga'
-import { schedule, scheduleWithPredicate } from '../src'
+import { always, io } from 'little-saga'
+import { schedule, scheduleWithPredicate, wait, waitWithPredicate } from '../src'
+import { scheduleWithPredicateWorker, scheduleWorker } from '../src/schedule'
 
-const every100 = []
-for (let i = 0; i < 100; i++) {
-  every100.push(100 * i)
-}
+test('schedule', () => {
+  const pattern = { minute: [0, 20, 40] }
+  const fn = () => null
+  const args = [1, 2, 3]
 
-test('schedule', async () => {
-  const array = []
+  expect(schedule(pattern, fn, ...args)).toEqual(io.fork(scheduleWorker, pattern, fn, ...args))
+})
 
-  runSaga({}, function*() {
-    yield schedule({ millisecond: every100 }, () => {
-      const d = new Date()
-      array.push(d.getMilliseconds())
+test('scheduleWorker', () => {
+  const pattern = { minute: [0, 20, 40] }
+  const fn = () => null
+  const args = [1, 2, 3]
+  const gen = scheduleWorker(pattern, fn, ...args)
+
+  for (let i = 0; i < 10; i++) {
+    expect(gen.next()).toEqual({
+      done: false,
+      value: io.call(wait, pattern),
     })
-  })
-
-  await delay(2000)
-  expect(array.length).toBeGreaterThanOrEqual(18)
-  expect(array.length).toBeLessThanOrEqual(21)
-  expect(array.every(ms => ms % 100 < 30)).toBe(true)
+    expect(gen.next()).toEqual({
+      done: false,
+      value: io.fork(fn, ...args),
+    })
+  }
 })
 
 test('scheduleWithPredicate', async () => {
-  const predicate = date => {
-    return date.getMilliseconds() >= 500
-  }
+  const pattern = { minute: [0, 20, 40] }
+  const fn = () => null
+  const args = [1, 2, 3]
 
-  const array = []
+  expect(scheduleWithPredicate(pattern, fn, ...args)).toEqual(
+    io.fork(scheduleWithPredicateWorker, pattern, fn, ...args),
+  )
+})
 
-  runSaga({}, function*() {
-    yield scheduleWithPredicate({ millisecond: every100 }, predicate, () => {
-      const d = new Date()
-      array.push(d.getMilliseconds())
+test('scheduleWithPredicateWorker', () => {
+  const pattern = { minute: [0, 20, 40] }
+  const fn = () => null
+  const predicate = always(true)
+  const args = [1, 2, 3]
+  const gen = scheduleWithPredicateWorker(pattern, predicate, fn, ...args)
+
+  for (let i = 0; i < 10; i++) {
+    expect(gen.next()).toEqual({
+      done: false,
+      value: io.call(waitWithPredicate, pattern, predicate),
     })
-  })
-
-  await delay(2000)
-  expect(array.length).toBeGreaterThanOrEqual(8)
-  expect(array.length).toBeLessThanOrEqual(11)
-  expect(array.every(ms => ms >= 500 && ms % 100 < 30)).toBe(true)
+    expect(gen.next()).toEqual({
+      done: false,
+      value: io.fork(fn, ...args),
+    })
+  }
 })
