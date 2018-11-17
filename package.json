@@ -1,31 +1,32 @@
 {
   "name": "@little-saga/schedule",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "license": "MIT",
   "author": {
     "name": "Shi Feichao",
     "email": "842351815@qq.com",
     "url": "https://github.com/shinima"
   },
-  "repository": "https://github.com/little-saga/schedule",
+  "repository": "https://github.com/little-saga/schedule.git",
   "main": "dist/index.js",
   "module": "dist/index.mjs",
   "typings": "index.d.ts",
   "scripts": {
     "build": "rollup --config rollup.config.js",
     "test": "jest --coverage",
-    "prepublish": "rimraf dist && npm run build"
+    "prepublishOnly": "rimraf dist && npm run build"
   },
   "files": [
     "dist/",
     "index.d.ts",
+    "package.json",
     "readme.md"
   ],
   "dependencies": {
-    "little-saga": "^0.5.1"
+    "little-saga": "^0.6.0"
   },
   "devDependencies": {
-    "@babel/core": "^7.1.2",
+    "@babel/core": "^7.1.6",
     "@babel/node": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.1.0",
     "@babel/plugin-syntax-object-rest-spread": "^7.0.0",
@@ -33,9 +34,9 @@
     "babel-core": "^7.0.0-0",
     "babel-jest": "^23.6.0",
     "jest": "^23.6.0",
-    "prettier": "^1.14.3",
+    "prettier": "^1.15.2",
     "rimraf": "^2.6.2",
-    "rollup": "^0.66.6"
+    "rollup": "^0.67.3"
   },
   "babel": {
     "plugins": [
